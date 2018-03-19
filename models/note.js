@@ -3,8 +3,8 @@ const Schema        = mongoose.Schema;
 const moment        = require("moment");
 
 const NoteSchema  = new Schema({
-  title          : { type: String, required: [true, "Note must have a title"] },
-  text           : { type: String, required: [true, "Note must have text"] },
+  title          : { type: String, required: true },
+  text           : { type: String, required: true },
   _author        : [ { type: Schema.Types.ObjectId, ref: 'User' } ],
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }

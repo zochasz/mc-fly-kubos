@@ -1,60 +1,62 @@
-const express = require('express');
-const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const app = express();
-const expressLayouts = require('express-ejs-layouts');
+const express           = require('express');
+const path              = require('path');
+const favicon           = require('serve-favicon');
+const logger            = require('morgan');
+const cookieParser      = require('cookie-parser');
+const bodyParser        = require('body-parser');
+const app               = express();
+const expressLayouts    = require('express-ejs-layouts');
 
-const passportRouter = require("./routes/passportRouter");
+const passportRouter   = require("./routes/passportRouter");
+const note   = require("./routes/note");
 
 //mongoose configuration
-const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/passport-local");
+const mongoose         = require("mongoose");
+mongoose.connect("mongodb://localhost/mc-key-kubos");
 
 //require the user model
-const User = require("./models/user");
-const session       = require("express-session");
-const bcrypt        = require("bcrypt");
-const passport      = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const flash = require("connect-flash");
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+const User            = require("./models/user");
+const Note            = require("./models/note");
+const session         = require("express-session");
+const bcrypt          = require("bcrypt");
+const passport        = require("passport");
+const LocalStrategy   = require("passport-local").Strategy;
+const flash           = require("connect-flash");
+const GoogleStrategy  = require("passport-google-oauth").OAuth2Strategy;
 
 //enable sessions here
 app.use(session({
-  secret: "our-passport-local-strategy-app",
+  secret: "mckeysecret",
   resave: true,
   saveUninitialized: true
 }));
 
 //initialize passport and session here
-passport.use(new GoogleStrategy({
-  clientID: "1066047870073-kb6nll0ln2pc16cd29hnjsugmfr6dtd0.apps.googleusercontent.com",
-  clientSecret: "eUH6ijHUJRkulNIyHsr5pc9t",
-  callbackURL: "/auth/google/callback"
-}, (accessToken, refreshToken, profile, done) => {
-  User.findOne({ googleID: profile.id }, (err, user) => {
-    if (err) {
-      return done(err);
-    }
-    if (user) {
-      return done(null, user);
-    }
-
-    const newUser = new User({
-      googleID: profile.id
-    });
-
-    newUser.save((err) => {
-      if (err) {
-        return done(err);
-      }
-      done(null, newUser);
-    });
-  });
-}));
+// passport.use(new GoogleStrategy({
+//   clientID: "1066047870073-kb6nll0ln2pc16cd29hnjsugmfr6dtd0.apps.googleusercontent.com",
+//   clientSecret: "eUH6ijHUJRkulNIyHsr5pc9t",
+//   callbackURL: "/auth/google/callback"
+// }, (accessToken, refreshToken, profile, done) => {
+//   User.findOne({ googleID: profile.id }, (err, user) => {
+//     if (err) {
+//       return done(err);
+//     }
+//     if (user) {
+//       return done(null, user);
+//     }
+//
+//     const newUser = new User({
+//       googleID: profile.id
+//     });
+//
+//     newUser.save((err) => {
+//       if (err) {
+//         return done(err);
+//       }
+//       done(null, newUser);
+//     });
+//   });
+// }));
 
 passport.serializeUser((user, cb) => {
   cb(null, user.id);
@@ -102,6 +104,7 @@ app.use(expressLayouts);
 
 // require in the routers
 app.use('/', passportRouter);
+app.use('/note', note);
 
 
 // catch 404 and forward to error handler
