@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const dbName = 'mc-key-kubos';
-const dbUri = `mongodb://localhost/mc-key-kubos`;
+const dbUri = `mongodb://heroku_mss82qrq:q1ep2iq67u0clcigbgi74oks4o@ds219879.mlab.com:19879/heroku_mss82qrq`;
 
 mongoose.connect(dbUri);
 
