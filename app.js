@@ -1,99 +1,32 @@
-const express           = require('express');
-const path              = require('path');
-const favicon           = require('serve-favicon');
-const logger            = require('morgan');
-const cookieParser      = require('cookie-parser');
-const bodyParser        = require('body-parser');
-const app               = express();
-const expressLayouts    = require('express-ejs-layouts');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const passport = require('passport');
+const expressLayouts = require('express-ejs-layouts');
+const cors = require('cors');
+const MongoStore        = require('connect-mongo')(session);
+const mongoose          = require('mongoose');
+                          require("dotenv").config();
+                          
+require('./configs/db.config');
+require('./configs/passport.config').setup(passport);
+const corsOptions = require('./configs/cors.config');
 
-const passportRouter   = require("./routes/passportRouter");
-const note   = require("./routes/note");
+const passportRouter = require('./routes/passportRouter');
+const noteRoutes = require('./routes/note');
 
-//mongoose configuration
-const mongoose         = require("mongoose");
-mongoose.connect("mongodb://localhost/mc-key-kubos");
-
-//require the user model
-const User            = require("./models/user");
-const Note            = require("./models/note");
-const session         = require("express-session");
-const bcrypt          = require("bcrypt");
-const passport        = require("passport");
-const LocalStrategy   = require("passport-local").Strategy;
-const flash           = require("connect-flash");
-const GoogleStrategy  = require("passport-google-oauth").OAuth2Strategy;
-
-//enable sessions here
-app.use(session({
-  secret: "mckeysecret",
-  resave: true,
-  saveUninitialized: true
-}));
-
-//initialize passport and session here
-// passport.use(new GoogleStrategy({
-//   clientID: "1066047870073-kb6nll0ln2pc16cd29hnjsugmfr6dtd0.apps.googleusercontent.com",
-//   clientSecret: "eUH6ijHUJRkulNIyHsr5pc9t",
-//   callbackURL: "/auth/google/callback"
-// }, (accessToken, refreshToken, profile, done) => {
-//   User.findOne({ googleID: profile.id }, (err, user) => {
-//     if (err) {
-//       return done(err);
-//     }
-//     if (user) {
-//       return done(null, user);
-//     }
-//
-//     const newUser = new User({
-//       googleID: profile.id
-//     });
-//
-//     newUser.save((err) => {
-//       if (err) {
-//         return done(err);
-//       }
-//       done(null, newUser);
-//     });
-//   });
-// }));
-
-passport.serializeUser((user, cb) => {
-  cb(null, user.id);
-});
-
-passport.deserializeUser((id, cb) => {
-  User.findOne({ "_id": id }, (err, user) => {
-    if (err) { return cb(err); }
-    cb(null, user);
-  });
-});
-app.use(flash());
-passport.use(new LocalStrategy((username, password, next) => {
-  User.findOne({ username }, (err, user) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return next(null, false, { message: "Incorrect username" });
-    }
-    if (!bcrypt.compareSync(password, user.password)) {
-      return next(null, false, { message: "Incorrect password" });
-    }
-
-    return next(null, user);
-  });
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
-
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.set ("layout", "main-layout");
 
+app.use(cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -102,14 +35,24 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressLayouts);
 
-// require in the routers
-app.use('/', passportRouter);
-app.use('/note', note);
+app.use(session({
+  secret: 'KubiteSuperSecret',
+  resave: false,
+  saveUninitialized: true,
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
+  })
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
+
+app.use(`/`, passportRouter);
+app.use(`/`, noteRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  const err = new Error('Not Found');
+  var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -122,7 +65,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({ message: err.message });
 });
 
 module.exports = app;

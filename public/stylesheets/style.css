@@ -6,3 +6,39 @@ body {
 a {
   color: #00B7FF;
 }
+
+.formulario {
+  width: 400px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  margin: 25px auto;
+  padding: 20px;
+}
+.formulario button {
+  width: 100%;
+  background-color: #aeb3ba;
+  border: 1px solid #6b6e72;
+  margin: 10px 0px;
+}
+h1 {
+  font-size: 50px;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 600;
+}
+.welcome a {
+  color: black;
+}
+.note-box {
+  width: 22%;
+  height: 100px;
+  float: left;
+  margin: 15px;
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 10px;
+  /* overflow: hidden; */
+}
+.t-a-r{
+  text-align: right;
+}

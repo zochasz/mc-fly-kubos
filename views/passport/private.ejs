@@ -1,20 +1,25 @@
-<div>Private page</div>
-<% if (user) { %>
-  <div>
-    <h1>Who's the best developer?</h1>
-    <h1>You are, <span style="color: red;"><%= user.username%></span>. You are. </h1>
-    <img src="http://media.giphy.com/media/UsK5GqD3e0huU/giphy.gif" alt="You rock.">
-    <br> <a href="/logout">Log out</a>
-  </div>
-
-  <div>
-    <a href='/note/new'>New note</a>
-
-  </div>
-<% } %>
-
-
-<!-- Como USUARIO quiero poder llamar al API, es decir, quiero poder tener un servidor local
+<div>Welcome
+  <%= user.username%>
+</div>
+<div class="notes-listing">
+  <% notes.forEach((note) => { %>
+    <div class="note-box">
+      <a class="note-link" href="/note/<%= note._id %>">
+        <p> <strong><%= note.title %> </strong></p>
+        <p><%= note.text %></p>
+        <p class="t-a-r">
+          <% let author = note._author %>
+          <%= author %>
+        </p>
+      </a>
+    </div>
+    <%  }) %>
+      <a href='/note/new'>
+        <div class="note-box">
+          New note
+        </div>
+      </a>
+      <!-- Como USUARIO quiero poder llamar al API, es decir, quiero poder tener un servidor local
 al que hacer una llamada HTTP y que me devuelva algo.
 Como USUARIO quiero poder llamar al API para crear notas.
 Como USUARIO quiero poder llamar al API para consultar las notas.
