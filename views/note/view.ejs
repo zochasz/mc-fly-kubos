@@ -1,0 +1,8 @@
+<div class="note-box">
+  <p> <strong><%= note.title %> </strong></p>
+  <p><%= note.text %></p>
+  <div class="footer">
+    <p class="f-r"><%= note._authorName %></p>
+    <a class="f-l" href='/note/favorite/<%= note._id %>'><i class="far fa-heart"></i></a>
+  </div>
+</div>

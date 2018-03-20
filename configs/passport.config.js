@@ -37,7 +37,6 @@ module.exports.setup = (passport) => {
 }
 
 module.exports.isAuthenticated = (req, res, next) => {
-  console.log("isAuthneticated1")
     if (req.isAuthenticated()) {
         return next();
     } else {

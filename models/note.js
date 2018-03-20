@@ -6,6 +6,8 @@ const NoteSchema  = new Schema({
   title          : { type: String, required: true },
   text           : { type: String, required: true },
   _author        : { type: Schema.Types.ObjectId, ref: 'User' },
+  _authorName    : { type: String, required: true },
+  _favorite      : [ { type: Schema.Types.ObjectId, ref: 'User' } ]
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
 });

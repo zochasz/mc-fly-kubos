@@ -4,15 +4,18 @@ const Note = require('../models/note');
 const passport = require('passport');
 
 module.exports.landingPage = (req, res, next) => {
-  return res.render("index")
+  let user = null;
+  return res.render("index", {user})
 }
 
 module.exports.preRegister = (req, res, next) => {
-  return res.render("passport/signup")
+  let user = null;
+  return res.render("passport/signup", {user})
 }
 
 module.exports.preLogin = (req, res, next) => {
-  return res.render("passport/login")
+  let user = null;
+  return res.render("passport/login", {user})
 }
 module.exports.postLogin = (req, res, next) =>  {
     const username = req.body.username;

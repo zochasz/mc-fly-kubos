@@ -1,12 +1,16 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
-a {
-  color: #00B7FF;
+.header {
+  background: grey;
+  padding: 20px;
+  min-width: 500px;
+  
 }
+.header a {
+  margin-left: 40px;
 
+}
 .formulario {
   width: 400px;
   border: 1px solid grey;
@@ -20,25 +24,42 @@ a {
   border: 1px solid #6b6e72;
   margin: 10px 0px;
 }
+.formulario a {
+  color: orange;
+}
 h1 {
   font-size: 50px;
   text-transform: uppercase;
   text-align: center;
   font-weight: 600;
 }
-.welcome a {
+a {
   color: black;
 }
+a:hover {
+  text-decoration: none;
+}
+a .note-box.new {
+  text-align: center;
+}
 .note-box {
-  width: 22%;
-  height: 100px;
-  float: left;
-  margin: 15px;
+  width: 450px;
+  margin: 15px auto;
   border: 1px solid grey;
   border-radius: 5px;
   padding: 10px;
   /* overflow: hidden; */
 }
-.t-a-r{
-  text-align: right;
+.note-box .footer {
+  height: 20px;
 }
+.f-r{
+  float: right;
+}
+.f-l{
+  float: left;
+}
+.fa-heart {
+  color: red;
+}
+.

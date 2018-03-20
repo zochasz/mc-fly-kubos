@@ -7,7 +7,6 @@ const moment        = require("moment");
 const UserSchema  = new Schema({
   username        : { type: String, required: false },
   password        : { type: String, required: false },
-  _favourites     : [ { type: Schema.Types.ObjectId, ref: 'Note' } ]
   },
   { timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
 });
