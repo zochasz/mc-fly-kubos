@@ -20,13 +20,16 @@ module.exports.preLogin = (req, res, next) => {
 module.exports.postLogin = (req, res, next) =>  {
     const username = req.body.username;
     const password = req.body.password;
+    const message1 = 'Username and password are required'
+    const message2 = 'Username or password is invalid'
+    let user = res.req.user
 
     if (!username || !password) {
-      return res.render("passport/login");
+      return res.render("passport/login", { message1, user });
     } else {
         passport.authenticate('local-auth', (err, user, message) => {
             if (err) { return next(err) }
-            else if (!user) { return res.render("passport/login");
+            else if (!user) { return res.render("passport/login", { message2, user });
             } else {
                 req.login(user, (err) => {
                     if (err) { return next(err)
